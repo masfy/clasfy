@@ -146,7 +146,7 @@ export default function BantuanPage() {
 
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <Button variant="secondary" className="w-full bg-slate-100 text-slate-900 hover:bg-slate-200">
+                                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm font-semibold">
                                         Baca Panduan
                                     </Button>
                                 </DialogTrigger>
