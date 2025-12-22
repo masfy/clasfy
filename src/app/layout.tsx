@@ -15,7 +15,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Clasfy - Class Management",
+  title: "Clasfy - Manajemen Kelas Digital",
   description: "Modern class management dashboard",
   icons: {
     icon: "/clasfy-logo.png",
