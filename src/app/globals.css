@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+:root {
+  /* Light Mode - Clean Blue & White */
+  --background: #FFFFFF;
+  /* White - Clean Base */
+  --foreground: #1E293B;
+  /* Slate 800 - Pastel Black */
+  --card: #FFFFFF;
+  --card-foreground: #1E293B;
+  --primary: #3B82F6;
+  /* Blue 500 - Vibrant Blue */
+  --primary-foreground: #FFFFFF;
+  --muted: #EFF6FF;
+  /* Blue 50 - Pastel Blue Tint */
+  --muted-foreground: #64748B;
+  /* Slate 500 - Muted Pastel Black */
+  --accent: #DBEAFE;
+  /* Blue 100 - Pastel Blue Accent */
+  --accent-foreground: #1E293B;
+  --border: #E2E8F0;
+  /* Slate 200 - Soft Border */
+  --popover: #FFFFFF;
+  --popover-foreground: #1E293B;
+}
+
+
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Ensure body doesn't scroll if main handles it */
+body {
+  overflow: hidden;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body,
+  main {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Ensure tables print fully */
+  table {
+    width: 100% !important;
+  }
+
+  /* Hide scrollbars in print */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
