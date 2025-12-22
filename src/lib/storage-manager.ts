@@ -1,4 +1,4 @@
-import { get, set } from 'idb-keyval';
+import { get, set, clear } from 'idb-keyval';
 
 export type SyncOperation = {
     id: string;
@@ -76,6 +76,15 @@ export class StorageManager {
             await set(this.SYNC_QUEUE_KEY, []);
         } catch (error) {
             console.error('Error resetting sync queue:', error);
+        }
+    }
+    static async clearAllData(): Promise<void> {
+        if (typeof window === 'undefined') return;
+        try {
+            await clear();
+            console.log('All local data cleared from IndexedDB.');
+        } catch (error) {
+            console.error('Error clearing local data:', error);
         }
     }
 }
