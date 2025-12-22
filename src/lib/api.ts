@@ -15,6 +15,9 @@ export const getApiUrl = () => {
     }
 
     // 3. Fallback to Default
+    if (typeof window !== 'undefined') {
+        // console.log("[API] Current URL Source:", storedUrl ? "LocalStorage" : "Default/Env");
+    }
     return DEFAULT_API_URL;
 };
 
@@ -27,6 +30,7 @@ export type ApiResponse<T = any> = {
 
 export async function fetchFromGAS(action: string, params: Record<string, string> = {}, retries = 3, backoff = 1000): Promise<ApiResponse> {
     const API_URL = getApiUrl();
+    console.log(`[API] fetchFromGAS (${action}) using URL:`, API_URL);
 
     if (!API_URL) {
         console.warn('Google Apps Script API URL is not set.');
