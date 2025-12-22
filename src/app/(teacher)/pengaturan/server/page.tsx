@@ -118,14 +118,14 @@ export default function ServerSettingsPage() {
                         </p>
                     </div>
 
-                    <div className="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-lg border border-blue-100 dark:border-blue-900 flex gap-3 items-start">
-                        <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                        <div className="text-sm text-blue-800 dark:text-blue-300">
-                            <p className="font-semibold mb-1">Catatan Penting:</p>
-                            <ul className="list-disc list-inside space-y-1 opacity-90">
-                                <li>Perubahan server akan mempengaruhi semua data yang ditampilkan.</li>
-                                <li>Pastikan struktur database (Spreadsheet) sesuai dengan template Clasfy.</li>
-                                <li>Jika terjadi error, Anda bisa mereset ke server bawaan kapan saja.</li>
+                    <div className="bg-yellow-100 p-4 rounded-lg border-2 border-red-500 flex gap-3 items-start">
+                        <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                        <div className="text-sm text-slate-900">
+                            <p className="font-bold mb-1 uppercase tracking-wide text-red-600">Peringatan Penting!</p>
+                            <ul className="list-disc list-inside space-y-1 font-medium">
+                                <li>Jangan mengubah URL ini sembarangan jika tidak paham.</li>
+                                <li>Perubahan yang salah akan menyebabkan aplikasi <strong>tidak bisa diakses</strong> atau <strong>error</strong>.</li>
+                                <li>Jika terjadi kendala atau ingin mengganti server, silakan <strong>hubungi Administrator/Developer</strong> terlebih dahulu.</li>
                             </ul>
                         </div>
                     </div>
