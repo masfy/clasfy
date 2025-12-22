@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { AlertCircle, CheckCircle2, Database, RotateCcw, Save } from "lucide-react"
 import { getApiUrl } from "@/lib/api"
+import { StorageManager } from "@/lib/storage-manager"
 
 export default function ServerSettingsPage() {
     const { toast } = useToast()
@@ -48,6 +49,12 @@ export default function ServerSettingsPage() {
         // Simulate verification delay
         setTimeout(() => {
             localStorage.setItem('clasfy_api_url', apiUrl.trim())
+
+            // Clear local cache to ensure fresh data fetch
+            StorageManager.clearAllData().then(() => {
+                console.log("Local cache cleared for new server connection");
+            });
+
             setIsDefault(false)
             setIsLoading(false)
 
@@ -64,22 +71,7 @@ export default function ServerSettingsPage() {
         }, 800)
     }
 
-    const handleReset = () => {
-        if (confirm("Apakah Anda yakin ingin kembali ke server bawaan?")) {
-            localStorage.removeItem('clasfy_api_url')
-            setIsDefault(true)
 
-            toast({
-                title: "Server Direset",
-                description: "Kembali menggunakan server bawaan.",
-                variant: "default"
-            })
-
-            setTimeout(() => {
-                window.location.reload()
-            }, 1000)
-        }
-    }
 
     return (
         <div className="p-6 space-y-6 max-w-2xl mx-auto">
@@ -148,16 +140,7 @@ export default function ServerSettingsPage() {
                             {isLoading ? "Menyimpan..." : "Simpan Konfigurasi"}
                         </Button>
 
-                        {!isDefault && (
-                            <Button
-                                onClick={handleReset}
-                                variant="outline"
-                                className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
-                            >
-                                <RotateCcw className="mr-2 h-4 w-4" />
-                                Reset Default
-                            </Button>
-                        )}
+
                     </div>
                 </CardContent>
             </Card>
