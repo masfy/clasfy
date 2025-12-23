@@ -201,9 +201,13 @@ export default function RekapPresensiPage() {
                             <tr>
                                 {reportMode === "Bulanan" ? (
                                     <>
-                                        {dates.map(d => (
-                                            <th key={d} className="border border-black p-0.5 w-6 text-[10px]">{d}</th>
-                                        ))}
+                                        {dates.map(d => {
+                                            const date = new Date(parseInt(selectedYear), parseInt(selectedMonth), d)
+                                            const isSunday = date.getDay() === 0
+                                            return (
+                                                <th key={d} className={`border border-black p-0.5 w-6 text-[10px] ${isSunday ? 'bg-red-200' : ''}`}>{d}</th>
+                                            )
+                                        })}
                                     </>
                                 ) : null}
                                 <th className="border border-black p-1 w-12 bg-green-100">Hadir</th>
@@ -222,13 +226,17 @@ export default function RekapPresensiPage() {
 
                                         {reportMode === "Bulanan" && dates.map(d => {
                                             const status = getDailyStatus(student.id, d)
+                                            const date = new Date(parseInt(selectedYear), parseInt(selectedMonth), d)
+                                            const isSunday = date.getDay() === 0
+
                                             let colorClass = ""
                                             if (status === "H") colorClass = "text-green-600 font-bold"
                                             if (status === "S") colorClass = "text-blue-600 font-bold"
                                             if (status === "I") colorClass = "text-yellow-600 font-bold"
                                             if (status === "A") colorClass = "text-red-600 font-bold"
+
                                             return (
-                                                <td key={d} className={`border border-black p-0.5 text-center ${colorClass}`}>
+                                                <td key={d} className={`border border-black p-0.5 text-center ${colorClass} ${isSunday ? 'bg-red-200' : ''}`}>
                                                     {status !== "-" ? status : ""}
                                                 </td>
                                             )

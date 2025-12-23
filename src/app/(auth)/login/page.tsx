@@ -3,19 +3,25 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useData } from "@/lib/data-context"
+import { fetchFromGAS } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { User, Lock, GraduationCap, School, BadgeCheck } from "lucide-react"
-import { motion } from "framer-motion"
+import { User, Lock, GraduationCap, School, BadgeCheck, Wifi, WifiOff, Loader2, RefreshCw } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
 
 export default function LoginPage() {
     const router = useRouter()
     const { user: teacherData, students, isLoaded } = useData()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
+
+    // Connection State
+    const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'error'>('checking')
+    const [statusMessage, setStatusMessage] = useState("Menghubungkan ke server...")
 
     // Teacher Login State
     const [teacherId, setTeacherId] = useState("")
@@ -24,6 +30,32 @@ export default function LoginPage() {
     // Student Login State
     const [studentUsername, setStudentUsername] = useState("")
     const [studentPassword, setStudentPassword] = useState("")
+
+    const checkConnection = async () => {
+        setConnectionStatus('checking')
+        setStatusMessage("Menghubungkan ke server...")
+        try {
+            // Ping the server (fetching minimal data if possible, or just checking connectivity)
+            // Using 'getAllData' as a reliable reachability test
+            const response = await fetchFromGAS('getAllData')
+            if (response.status === 'success') {
+                setConnectionStatus('connected')
+                setStatusMessage("Terhubung ke Server")
+                // Clear success message after 3 seconds to be subtle
+                setTimeout(() => setStatusMessage(""), 3000)
+            } else {
+                throw new Error(response.message || "Server returned error")
+            }
+        } catch (e) {
+            console.error("Connection check failed:", e)
+            setConnectionStatus('error')
+            setStatusMessage("Gagal terhubung ke server")
+        }
+    }
+
+    useEffect(() => {
+        checkConnection()
+    }, [])
 
     const handleTeacherLogin = (e: React.FormEvent) => {
         e.preventDefault()
@@ -179,6 +211,48 @@ export default function LoginPage() {
                         <CardDescription className="text-muted-foreground font-medium">
                             Silakan masuk ke akun Anda
                         </CardDescription>
+
+                        {/* Connection Status Indicator */}
+                        <div className="flex justify-center mt-2">
+                            <AnimatePresence mode="wait">
+                                {connectionStatus === 'checking' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full"
+                                    >
+                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                        {statusMessage}
+                                    </motion.div>
+                                )}
+                                {connectionStatus === 'connected' && statusMessage && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        className="flex items-center gap-2 text-xs text-emerald-600 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20"
+                                    >
+                                        <Wifi className="h-3 w-3" />
+                                        {statusMessage}
+                                    </motion.div>
+                                )}
+                                {connectionStatus === 'error' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        className="flex items-center gap-2 text-xs text-red-600 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 cursor-pointer hover:bg-red-500/20 transition-colors"
+                                        onClick={checkConnection}
+                                    >
+                                        <WifiOff className="h-3 w-3" />
+                                        {statusMessage}
+                                        <RefreshCw className="h-3 w-3 ml-1" />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
                     </CardHeader>
                     <CardContent>
                         <Tabs defaultValue="student" className="w-full">
@@ -212,6 +286,7 @@ export default function LoginPage() {
                                                 value={studentUsername}
                                                 onChange={(e) => setStudentUsername(e.target.value)}
                                                 required
+                                                disabled={connectionStatus === 'checking'}
                                             />
                                         </div>
                                     </div>
@@ -227,12 +302,24 @@ export default function LoginPage() {
                                                 value={studentPassword}
                                                 onChange={(e) => setStudentPassword(e.target.value)}
                                                 required
+                                                disabled={connectionStatus === 'checking'}
                                             />
                                         </div>
                                     </div>
                                     {error && <p className="text-sm text-red-500 text-center bg-red-500/10 p-2 rounded-lg border border-red-500/20">{error}</p>}
-                                    <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300" disabled={isLoading}>
-                                        {isLoading ? "Memproses..." : "Masuk Sebagai Siswa"}
+                                    <Button
+                                        type="submit"
+                                        className={cn(
+                                            "w-full font-bold shadow-lg transition-all duration-300",
+                                            connectionStatus === 'error' ? "bg-red-500 hover:bg-red-600 shadow-red-500/20" : "bg-primary hover:bg-primary/90 shadow-primary/20 hover:shadow-primary/40"
+                                        )}
+                                        disabled={isLoading || connectionStatus === 'checking' || connectionStatus === 'error'}
+                                    >
+                                        {isLoading ? "Memproses..." : (
+                                            connectionStatus === 'checking' ? "Menghubungkan..." : (
+                                                connectionStatus === 'error' ? "Koneksi Bermasalah" : "Masuk Sebagai Siswa"
+                                            )
+                                        )}
                                     </Button>
                                 </form>
                             </TabsContent>
@@ -250,6 +337,7 @@ export default function LoginPage() {
                                                 value={teacherId}
                                                 onChange={(e) => setTeacherId(e.target.value)}
                                                 required
+                                                disabled={connectionStatus === 'checking'}
                                             />
                                         </div>
                                     </div>
@@ -265,12 +353,26 @@ export default function LoginPage() {
                                                 value={teacherPassword}
                                                 onChange={(e) => setTeacherPassword(e.target.value)}
                                                 required
+                                                disabled={connectionStatus === 'checking'}
                                             />
                                         </div>
                                     </div>
                                     {error && <p className="text-sm text-red-500 text-center bg-red-500/10 p-2 rounded-lg border border-red-500/20">{error}</p>}
-                                    <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300" disabled={isLoading || !isLoaded}>
-                                        {isLoading ? "Memproses..." : (!isLoaded ? "Menyinkronkan data..." : "Masuk Sebagai Guru")}
+                                    <Button
+                                        type="submit"
+                                        className={cn(
+                                            "w-full font-bold shadow-lg transition-all duration-300",
+                                            connectionStatus === 'error' ? "bg-red-500 hover:bg-red-600 shadow-red-500/20" : "bg-primary hover:bg-primary/90 shadow-primary/20 hover:shadow-primary/40"
+                                        )}
+                                        disabled={isLoading || !isLoaded || connectionStatus === 'checking' || connectionStatus === 'error'}
+                                    >
+                                        {isLoading ? "Memproses..." : (
+                                            connectionStatus === 'checking' ? "Menghubungkan..." : (
+                                                connectionStatus === 'error' ? "Koneksi Bermasalah" : (
+                                                    !isLoaded ? "Menyinkronkan data..." : "Masuk Sebagai Guru"
+                                                )
+                                            )
+                                        )}
                                     </Button>
                                 </form>
                             </TabsContent>

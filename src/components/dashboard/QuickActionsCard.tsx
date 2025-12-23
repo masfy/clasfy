@@ -29,7 +29,7 @@ export function QuickActionsCard() {
                         <span className="text-xs font-semibold">Presensi</span>
                     </Button>
                 </Link>
-                <Link href="/nilai/input" className="w-full">
+                <Link href="/penilaian/input" className="w-full">
                     <Button variant="ghost" className="w-full h-auto py-3 flex flex-col gap-2 bg-slate-50 border border-slate-100 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 text-slate-600 transition-all duration-300 group shadow-sm">
                         <div className="p-2 rounded-full bg-white shadow-sm group-hover:scale-110 transition-transform duration-300">
                             <FileEdit className="h-5 w-5 text-emerald-500" />
@@ -37,7 +37,7 @@ export function QuickActionsCard() {
                         <span className="text-xs font-semibold">Input Nilai</span>
                     </Button>
                 </Link>
-                <Link href="/tugas/baru" className="w-full">
+                <Link href="/penilaian/tugas" className="w-full">
                     <Button variant="ghost" className="w-full h-auto py-3 flex flex-col gap-2 bg-slate-50 border border-slate-100 hover:bg-purple-50 hover:border-purple-200 hover:text-purple-700 text-slate-600 transition-all duration-300 group shadow-sm">
                         <div className="p-2 rounded-full bg-white shadow-sm group-hover:scale-110 transition-transform duration-300">
                             <PlusCircle className="h-5 w-5 text-purple-500" />
@@ -45,7 +45,7 @@ export function QuickActionsCard() {
                         <span className="text-xs font-semibold">Buat Tugas</span>
                     </Button>
                 </Link>
-                <Link href="/pengumuman/baru" className="w-full">
+                <Link href="/komunikasi/pengumuman" className="w-full">
                     <Button variant="ghost" className="w-full h-auto py-3 flex flex-col gap-2 bg-slate-50 border border-slate-100 hover:bg-orange-50 hover:border-orange-200 hover:text-orange-700 text-slate-600 transition-all duration-300 group shadow-sm">
                         <div className="p-2 rounded-full bg-white shadow-sm group-hover:scale-110 transition-transform duration-300">
                             <Megaphone className="h-5 w-5 text-orange-500" />

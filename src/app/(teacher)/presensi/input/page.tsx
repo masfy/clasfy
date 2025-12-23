@@ -127,28 +127,43 @@ export default function InputPresensiPage() {
             </Card>
 
             {selectedClassId && (
-                <div className={`mb-4 p-3 rounded-lg border flex items-center gap-3 ${attendance.some(a => a.classId === parseInt(selectedClassId) && a.date === selectedDate)
+                <div className="space-y-4 mb-4">
+                    {/* Sunday Warning */}
+                    {new Date(selectedDate).getDay() === 0 && (
+                        <div className="p-3 rounded-lg border bg-red-50 border-red-200 text-red-700 flex items-center gap-3">
+                            <div className="h-5 w-5 rounded-full border-2 border-current flex items-center justify-center text-[10px] font-bold">!</div>
+                            <div className="flex-1">
+                                <p className="text-sm font-semibold">Hari Minggu</p>
+                                <p className="text-xs opacity-90">
+                                    Tanggal yang Anda pilih adalah hari Minggu (Libur).
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className={`p-3 rounded-lg border flex items-center gap-3 ${attendance.some(a => a.classId === parseInt(selectedClassId) && a.date === selectedDate)
                         ? "bg-green-50 border-green-200 text-green-700"
                         : "bg-yellow-50 border-yellow-200 text-yellow-700"
-                    }`}>
-                    {attendance.some(a => a.classId === parseInt(selectedClassId) && a.date === selectedDate) ? (
-                        <CalendarCheck className="h-5 w-5" />
-                    ) : (
-                        <div className="h-5 w-5 rounded-full border-2 border-current flex items-center justify-center text-[10px] font-bold">!</div>
-                    )}
-                    <div className="flex-1">
-                        <p className="text-sm font-semibold">
-                            {attendance.some(a => a.classId === parseInt(selectedClassId) && a.date === selectedDate)
-                                ? "Presensi Sudah Diinput"
-                                : "Presensi Belum Diinput"
-                            }
-                        </p>
-                        <p className="text-xs opacity-90">
-                            {attendance.some(a => a.classId === parseInt(selectedClassId) && a.date === selectedDate)
-                                ? `Data kehadiran untuk tanggal ${selectedDate} sudah tersimpan.`
-                                : `Silakan input dan simpan data kehadiran untuk tanggal ${selectedDate}.`
-                            }
-                        </p>
+                        }`}>
+                        {attendance.some(a => a.classId === parseInt(selectedClassId) && a.date === selectedDate) ? (
+                            <CalendarCheck className="h-5 w-5" />
+                        ) : (
+                            <div className="h-5 w-5 rounded-full border-2 border-current flex items-center justify-center text-[10px] font-bold">!</div>
+                        )}
+                        <div className="flex-1">
+                            <p className="text-sm font-semibold">
+                                {attendance.some(a => a.classId === parseInt(selectedClassId) && a.date === selectedDate)
+                                    ? "Presensi Sudah Diinput"
+                                    : "Presensi Belum Diinput"
+                                }
+                            </p>
+                            <p className="text-xs opacity-90">
+                                {attendance.some(a => a.classId === parseInt(selectedClassId) && a.date === selectedDate)
+                                    ? `Data kehadiran untuk tanggal ${selectedDate} sudah tersimpan.`
+                                    : `Silakan input dan simpan data kehadiran untuk tanggal ${selectedDate}.`
+                                }
+                            </p>
+                        </div>
                     </div>
                 </div>
             )}

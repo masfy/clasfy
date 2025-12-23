@@ -1,17 +1,19 @@
 // Default fallback URL (Development / Demo)
-const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbzuJFeAeXwHbukVMsFPcUQ7JNZTwwMofD96nIfo-BKrjxj_BL2xSdwdLelianXCbIAzXA/exec";
+const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbywTCsP0psHdMidA5qBPmtiWdLNon1bZYPMsAsb_v59uPnzMxuS7MPYCPu4vuPxY9Pevg/exec";
 
 // Helper to get the current API URL
 export const getApiUrl = () => {
-    // 1. Check Environment Variable (Highest Priority for Multi-School Deployment)
-    if (process.env.NEXT_PUBLIC_API_URL) {
-        return process.env.NEXT_PUBLIC_API_URL;
-    }
-
-    // 2. Check Local Storage (For User Override / "Bring Your Own Backend")
+    // 1. Check Local Storage (Highest Priority - User Override)
     if (typeof window !== 'undefined') {
         const storedUrl = localStorage.getItem('clasfy_api_url');
-        if (storedUrl) return storedUrl;
+        if (storedUrl) {
+            return storedUrl;
+        }
+    }
+
+    // 2. Check Environment Variable
+    if (process.env.NEXT_PUBLIC_API_URL) {
+        return process.env.NEXT_PUBLIC_API_URL;
     }
 
     // 3. Fallback to Default
@@ -27,6 +29,7 @@ export type ApiResponse<T = any> = {
 
 export async function fetchFromGAS(action: string, params: Record<string, string> = {}, retries = 3, backoff = 1000): Promise<ApiResponse> {
     const API_URL = getApiUrl();
+    console.log(`[API] fetchFromGAS (${action}) using URL:`, API_URL);
 
     if (!API_URL) {
         console.warn('Google Apps Script API URL is not set.');
@@ -39,7 +42,7 @@ export async function fetchFromGAS(action: string, params: Record<string, string
 
     for (let i = 0; i < retries; i++) {
         try {
-            const response = await fetch(url.toString());
+            const response = await fetch(url.toString(), { cache: 'no-store' });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

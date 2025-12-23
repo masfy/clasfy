@@ -214,10 +214,12 @@ export function Header({ onMenuClick }: HeaderProps) {
                                             <span>Edit Profil</span>
                                         </button>
                                     </Link>
-                                    <button className="flex w-full items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted rounded-lg transition-colors">
-                                        <HelpCircle className="h-4 w-4" />
-                                        <span>Pusat Bantuan</span>
-                                    </button>
+                                    <Link href="/bantuan" onClick={() => setIsDropdownOpen(false)}>
+                                        <button className="flex w-full items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted rounded-lg transition-colors">
+                                            <HelpCircle className="h-4 w-4" />
+                                            <span>Pusat Bantuan</span>
+                                        </button>
+                                    </Link>
                                     <div className="h-px bg-border my-1" />
                                     <button
                                         onClick={() => {

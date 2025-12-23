@@ -139,14 +139,7 @@ export function Sidebar({ className, isOpen, onClose, ...props }: SidebarProps) 
             ]
         },
         { id: "bantuan", icon: HelpCircle, label: "Bantuan", href: "/bantuan" },
-        {
-            id: "pengaturan",
-            icon: Settings,
-            label: "Pengaturan",
-            submenus: [
-                { label: "Server Database", icon: Database, href: "/pengaturan/server" }
-            ]
-        },
+        { id: "pengaturan", icon: Settings, label: "Pengaturan", href: "/pengaturan" },
     ]
 
     const sidebarRef = React.useRef<HTMLDivElement>(null)
