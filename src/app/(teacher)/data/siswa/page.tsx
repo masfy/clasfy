@@ -14,7 +14,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 import { useSearchParams } from "next/navigation"
 
-export default function DataSiswaPage() {
+import { Suspense } from "react"
+
+function DataSiswaContent() {
     const { students, classes, addStudent, updateStudent, deleteStudent, isSyncing, syncError, forceSync, isLoaded } = useData()
     const { toast } = useToast()
     const searchParams = useSearchParams()
@@ -440,5 +442,22 @@ export default function DataSiswaPage() {
                 </form>
             </CustomModal>
         </div>
+    )
+}
+
+export default function DataSiswaPage() {
+    return (
+        <Suspense fallback={
+            <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                </div>
+            </div>
+        }>
+            <DataSiswaContent />
+        </Suspense>
     )
 }
