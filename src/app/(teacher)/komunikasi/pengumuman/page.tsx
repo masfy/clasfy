@@ -12,9 +12,10 @@ import { useData, Post } from "@/lib/data-context"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function PengumumanPage() {
-    const { user, posts, addPost, deletePost, togglePostStatus, addComment, addNotification } = useData()
+    const { user, posts, addPost, deletePost, togglePostStatus, addComment, addNotification, isLoaded } = useData()
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
     const [selectedPost, setSelectedPost] = useState<Post | null>(null)
     const [newPostTitle, setNewPostTitle] = useState("")
@@ -67,6 +68,48 @@ export default function PengumumanPage() {
 
     const getInitials = (name: string) => {
         return name.substring(0, 2).toUpperCase()
+    }
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 animate-in fade-in duration-700">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <Skeleton className="h-10 w-40" />
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <Card key={i} className="bg-card border-border flex flex-col">
+                            <CardHeader className="pb-2">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-center gap-2">
+                                        <Skeleton className="h-8 w-8 rounded-full" />
+                                        <div className="flex flex-col gap-1">
+                                            <Skeleton className="h-3 w-24" />
+                                            <Skeleton className="h-2 w-16" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <Skeleton className="h-6 w-3/4 mt-2" />
+                            </CardHeader>
+                            <CardContent className="flex-1 space-y-2">
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-2/3" />
+                            </CardContent>
+                            <CardFooter className="pt-2 border-t border-border flex justify-between">
+                                <Skeleton className="h-3 w-20" />
+                                <Skeleton className="h-3 w-20" />
+                            </CardFooter>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+        )
     }
 
     return (

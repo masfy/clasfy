@@ -9,9 +9,10 @@ import { Input } from "@/components/ui/input"
 import { CalendarCheck, Save, Search } from "lucide-react"
 import { useData, AttendanceRecord } from "@/lib/data-context"
 import { useToast } from "@/components/ui/use-toast"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function InputPresensiPage() {
-    const { classes, students, attendance, saveAttendance } = useData()
+    const { classes, students, attendance, saveAttendance, isLoaded } = useData()
     const { toast } = useToast()
 
     const [selectedClassId, setSelectedClassId] = useState<string>("")
@@ -76,6 +77,59 @@ export default function InputPresensiPage() {
             .filter(s => s.class === classes.find(c => c.id === parseInt(selectedClassId))?.name)
             .filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
         : []
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 pb-24 animate-in fade-in duration-700">
+                <div>
+                    <Skeleton className="h-8 w-48 mb-2" />
+                    <Skeleton className="h-4 w-64" />
+                </div>
+
+                <Card className="bg-card border-border">
+                    <CardContent className="pt-6">
+                        <div className="grid gap-6 md:grid-cols-3 items-end">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="space-y-2">
+                                    <Skeleton className="h-4 w-24" />
+                                    <Skeleton className="h-10 w-full" />
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <div className="space-y-4">
+                    <Skeleton className="h-16 w-full rounded-lg" />
+                    <Card className="bg-card border-border">
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <Skeleton className="h-6 w-32" />
+                            <div className="flex gap-2">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <Skeleton key={i} className="h-4 w-16" />
+                                ))}
+                            </div>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <div key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border border-border">
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-5 w-48" />
+                                        <Skeleton className="h-3 w-24" />
+                                    </div>
+                                    <div className="flex gap-1">
+                                        {[1, 2, 3, 4].map((j) => (
+                                            <Skeleton key={j} className="h-8 w-10 rounded-md" />
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="space-y-6 pb-24">

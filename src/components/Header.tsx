@@ -2,28 +2,76 @@
 
 import * as React from "react"
 import { useSync } from "@/hooks/use-sync"
-import { Search, Bell, ChevronDown, Menu, BadgeCheck, User, Settings, HelpCircle, LogOut, Wifi, WifiOff, RefreshCw } from "lucide-react"
+import { Search, Bell, ChevronDown, Menu, BadgeCheck, User, Settings, HelpCircle, LogOut, Wifi, WifiOff, RefreshCw, Users } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { useData } from "@/lib/data-context"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-
 
 interface HeaderProps {
     onMenuClick?: () => void
 }
 
-
+interface SearchResult {
+    type: 'Siswa' | 'Kelas' | 'Menu'
+    title: string
+    subtitle: string
+    url: string
+}
 
 // ... imports
 
 export function Header({ onMenuClick }: HeaderProps) {
-    const { user, notifications, markNotificationAsRead } = useData()
+    const { user, notifications, markNotificationAsRead, students, classes } = useData()
     const { isSyncing, isOnline } = useSync()
+    const router = useRouter()
     const [isDropdownOpen, setIsDropdownOpen] = React.useState<string | boolean>(false)
     const dropdownRef = React.useRef<HTMLDivElement>(null)
     const notificationRef = React.useRef<HTMLDivElement>(null)
+
+    // Search State
+    const [searchQuery, setSearchQuery] = React.useState("")
+    const [searchResults, setSearchResults] = React.useState<SearchResult[]>([])
+    const [showResults, setShowResults] = React.useState(false)
+
+    const handleSearch = (query: string) => {
+        setSearchQuery(query)
+        if (!query.trim()) {
+            setSearchResults([])
+            return
+        }
+
+        const results: SearchResult[] = []
+        const lowerQuery = query.toLowerCase()
+
+        // Search Students
+        students.forEach(student => {
+            if (student.name.toLowerCase().includes(lowerQuery) || student.nis.includes(lowerQuery)) {
+                results.push({
+                    type: 'Siswa',
+                    title: student.name,
+                    subtitle: `${student.nis} • ${student.class}`,
+                    url: `/data/siswa?search=${encodeURIComponent(student.name)}`
+                })
+            }
+        })
+
+        // Search Classes
+        classes.forEach(cls => {
+            if (cls.name.toLowerCase().includes(lowerQuery)) {
+                results.push({
+                    type: 'Kelas',
+                    title: cls.name,
+                    subtitle: `${cls.description || 'Tidak ada deskripsi'}`,
+                    url: `/data/kelas` // Could be improved to filter class page if implemented
+                })
+            }
+        })
+
+        setSearchResults(results.slice(0, 5)) // Limit to 5 results
+    }
 
     // Filter notifications: Hide own notifications and sort by date
     const userNotifications = notifications
@@ -75,17 +123,68 @@ export function Header({ onMenuClick }: HeaderProps) {
             </div>
 
             {/* Center: Search (Hidden on mobile) */}
-            <div className="hidden md:flex w-1/3 items-center rounded-full bg-blue-50/50 px-4 py-2.5 border border-blue-100 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all duration-200">
-                <Search className="mr-2 h-4 w-4 text-blue-400" />
-                <input
-                    type="text"
-                    placeholder="Search"
-                    className="flex-1 bg-transparent text-sm text-slate-700 placeholder-blue-300 focus:outline-none"
-                />
-                <div className="flex items-center gap-1 text-xs text-blue-300">
-                    <span>⌘</span>
-                    <span>K</span>
+            <div className="hidden md:flex w-1/3 relative z-50">
+                <div className="w-full flex items-center rounded-full bg-blue-50/50 px-4 py-2.5 border border-blue-100 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all duration-200">
+                    <Search className="mr-2 h-4 w-4 text-blue-400" />
+                    <input
+                        type="text"
+                        placeholder="Cari siswa, kelas, atau menu..."
+                        className="flex-1 bg-transparent text-sm text-slate-700 placeholder-blue-300 focus:outline-none"
+                        value={searchQuery}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        onFocus={() => setShowResults(true)}
+                    />
+                    <div className="flex items-center gap-1 text-xs text-blue-300">
+                        <span>⌘</span>
+                        <span>K</span>
+                    </div>
                 </div>
+
+                {/* Search Results Dropdown */}
+                <AnimatePresence>
+                    {showResults && searchQuery && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl overflow-hidden max-h-[400px] overflow-y-auto"
+                        >
+                            {searchResults.length === 0 ? (
+                                <div className="p-4 text-center text-sm text-muted-foreground">
+                                    Tidak ada hasil ditemukan
+                                </div>
+                            ) : (
+                                <div className="py-2">
+                                    {searchResults.map((result, index) => (
+                                        <button
+                                            key={`${result.type}-${index}`}
+                                            className="w-full px-4 py-2 flex items-center gap-3 hover:bg-muted transition-colors text-left"
+                                            onClick={() => {
+                                                router.push(result.url)
+                                                setShowResults(false)
+                                                setSearchQuery("")
+                                            }}
+                                        >
+                                            <div className={`p-2 rounded-lg ${result.type === 'Siswa' ? 'bg-blue-100 text-blue-600' :
+                                                result.type === 'Kelas' ? 'bg-purple-100 text-purple-600' :
+                                                    'bg-slate-100 text-slate-600'
+                                                }`}>
+                                                {result.type === 'Siswa' ? <User className="h-4 w-4" /> :
+                                                    result.type === 'Kelas' ? <Users className="h-4 w-4" /> :
+                                                        <Search className="h-4 w-4" />}
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-medium text-foreground">{result.title}</div>
+                                                <div className="text-xs text-muted-foreground">{result.subtitle}</div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
             {/* Sync Status */}

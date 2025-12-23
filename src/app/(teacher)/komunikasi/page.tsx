@@ -4,13 +4,40 @@ import { Card, CardContent } from "@/components/ui/card"
 import { MessageSquare, Megaphone, Users } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useData } from "@/lib/data-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function KomunikasiPage() {
-    const { posts } = useData()
+    const { posts, isLoaded } = useData()
     const router = useRouter()
 
     const announcementCount = posts.filter(p => p.type === 'announcement').length
     const discussionCount = posts.filter(p => p.type === 'discussion' || !p.type).length
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 animate-in fade-in duration-700">
+                <div>
+                    <Skeleton className="h-8 w-48 mb-2" />
+                    <Skeleton className="h-4 w-64" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {[1, 2, 3].map((i) => (
+                        <Card key={i} className={`bg-card border-border ${i === 3 ? 'md:col-span-2 lg:col-span-1' : ''}`}>
+                            <CardContent className="p-6 flex items-center gap-4">
+                                <Skeleton className="h-14 w-14 rounded-full" />
+                                <div className="space-y-2">
+                                    <Skeleton className="h-4 w-32" />
+                                    <Skeleton className="h-8 w-16" />
+                                    <Skeleton className="h-3 w-24" />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="space-y-6">

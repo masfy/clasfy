@@ -250,14 +250,14 @@ const initialSekolah: SekolahData = {
 
 
 const initialUser: UserData = {
-    name: "Alfian Noor Arnaim",
-    nip: "19850101 201001 1 001",
-    email: "alfian.noor@sekolah.sch.id",
-    username: "alfian.guru",
+    name: "",
+    nip: "",
+    email: "",
+    username: "",
     avatar: "/logo.png",
-    motto: "Inspiring your minds, sharing knowledge",
+    motto: "",
     id: undefined,
-    password: "password123" // Default password for initial user
+    password: ""
 }
 
 const initialClasses: ClassData[] = []
@@ -279,20 +279,7 @@ const initialAttendance: AttendanceRecord[] = []
 
 const initialAssignments: Assignment[] = []
 const initialGrades: Grade[] = []
-const initialPosts: Post[] = [
-    {
-        id: 1,
-        title: "Selamat Datang di Forum Diskusi",
-        content: "Halo semuanya! Ini adalah tempat untuk berdiskusi tentang pelajaran dan kegiatan sekolah. Silakan gunakan dengan bijak.",
-        author: "Alfian Noor Arnaim",
-        date: "2025-12-01",
-        status: "Active",
-        type: "announcement",
-        comments: [
-            { id: 1, author: "Ahmad Rizky", content: "Siap pak!", date: "2025-12-01" }
-        ]
-    }
-]
+const initialPosts: Post[] = []
 const initialNotifications: Notification[] = []
 const initialChats: Chat[] = []
 

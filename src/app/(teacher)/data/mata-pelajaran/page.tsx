@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label"
 import { Plus, BookOpen, Pencil, Trash2 } from "lucide-react"
 import { CustomModal } from "@/components/ui/custom-modal"
 import { useData, MapelData } from "@/lib/data-context"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function DataMataPelajaranPage() {
-    const { mapel, addMapel, updateMapel, deleteMapel } = useData()
+    const { mapel, addMapel, updateMapel, deleteMapel, isLoaded } = useData()
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [editingId, setEditingId] = useState<number | null>(null)
     const [formData, setFormData] = useState<Partial<MapelData>>({})
@@ -44,6 +45,34 @@ export default function DataMataPelajaranPage() {
             })
         }
         setIsModalOpen(false)
+    }
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 animate-in fade-in duration-700">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <Skeleton className="h-10 w-32" />
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <Card key={i} className="bg-card border-border h-24">
+                            <CardHeader className="flex flex-row items-center gap-4">
+                                <Skeleton className="h-10 w-10 rounded-lg" />
+                                <div className="space-y-2">
+                                    <Skeleton className="h-5 w-32" />
+                                    <Skeleton className="h-3 w-16" />
+                                </div>
+                            </CardHeader>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+        )
     }
 
     return (

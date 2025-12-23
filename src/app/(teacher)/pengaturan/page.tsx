@@ -4,20 +4,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { StorageManager } from "@/lib/storage-manager"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Bell, Shield, Smartphone, Trash2, User, Database, Download, Upload } from "lucide-react"
+import { Shield, Smartphone, Trash2, User, Database, Download, Upload } from "lucide-react"
 import AkunPage from "./akun/page"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 
 export default function PengaturanPage() {
     const { toast } = useToast()
-    const [notifications, setNotifications] = useState({
-        email: true,
-        push: true,
-        updates: false
-    })
 
     const handleResetData = async () => {
         if (confirm("Apakah Anda yakin ingin mereset TOTAL aplikasi ini? \n\nSemua data lokal (cache, pengaturan, sesi login) akan dihapus. Aplikasi akan dimuat ulang seperti baru.")) {
@@ -91,9 +84,6 @@ export default function PengaturanPage() {
                     </TabsTrigger>
                     <TabsTrigger value="aplikasi" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-slate-500 shadow-sm">
                         <Smartphone className="h-4 w-4 mr-2" /> Aplikasi
-                    </TabsTrigger>
-                    <TabsTrigger value="notifikasi" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-slate-500 shadow-sm">
-                        <Bell className="h-4 w-4 mr-2" /> Notifikasi
                     </TabsTrigger>
                 </TabsList>
 
@@ -185,59 +175,6 @@ export default function PengaturanPage() {
                                 <Button variant="destructive" size="sm" onClick={handleResetData}>
                                     <Trash2 className="h-4 w-4 mr-2" /> Reset Total
                                 </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="notifikasi" className="mt-6">
-                    <Card className="bg-white border-slate-200 text-slate-900 shadow-md">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Bell className="h-5 w-5 text-yellow-500" />
-                                Preferensi Notifikasi
-                            </CardTitle>
-                            <CardDescription className="text-slate-500">Atur bagaimana Anda ingin menerima pemberitahuan.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-0.5">
-                                    <Label className="text-base">Notifikasi Email</Label>
-                                    <p className="text-sm text-slate-500">Terima laporan mingguan via email.</p>
-                                </div>
-                                <Switch
-                                    checked={notifications.email}
-                                    onCheckedChange={c => {
-                                        setNotifications({ ...notifications, email: c })
-                                        toast({ title: "Pengaturan disimpan" })
-                                    }}
-                                />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-0.5">
-                                    <Label className="text-base">Push Notification</Label>
-                                    <p className="text-sm text-slate-500">Pemberitahuan langsung di browser.</p>
-                                </div>
-                                <Switch
-                                    checked={notifications.push}
-                                    onCheckedChange={c => {
-                                        setNotifications({ ...notifications, push: c })
-                                        toast({ title: "Pengaturan disimpan" })
-                                    }}
-                                />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-0.5">
-                                    <Label className="text-base">Info Pembaruan</Label>
-                                    <p className="text-sm text-slate-500">Dapatkan info fitur baru Clasfy.</p>
-                                </div>
-                                <Switch
-                                    checked={notifications.updates}
-                                    onCheckedChange={c => {
-                                        setNotifications({ ...notifications, updates: c })
-                                        toast({ title: "Pengaturan disimpan" })
-                                    }}
-                                />
                             </div>
                         </CardContent>
                     </Card>

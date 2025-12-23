@@ -15,9 +15,10 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Medal, Plus, Pencil, Trash2 } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function LencanaPage() {
-    const { badges, addBadge, editBadge, deleteBadge } = useData()
+    const { badges, addBadge, editBadge, deleteBadge, isLoaded } = useData()
     const [mounted, setMounted] = React.useState(false)
 
     // Add Badge State
@@ -66,6 +67,38 @@ export default function LencanaPage() {
     }
 
     if (!mounted) return null
+
+    if (!isLoaded) {
+        return (
+            <div className="flex flex-col gap-6 pb-8 animate-in fade-in duration-700">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <Skeleton className="h-10 w-40" />
+                </div>
+
+                <Card className="bg-card border-border">
+                    <CardHeader>
+                        <Skeleton className="h-6 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
+                                <div key={i} className="flex flex-col items-center p-3 rounded-xl border border-border">
+                                    <Skeleton className="h-10 w-10 mb-2 rounded-full" />
+                                    <Skeleton className="h-4 w-20 mb-1" />
+                                    <Skeleton className="h-3 w-12" />
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col gap-6 pb-8">

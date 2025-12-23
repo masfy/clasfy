@@ -8,9 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Printer, FileText } from "lucide-react"
 import { useData } from "@/lib/data-context"
 import { useReactToPrint } from "react-to-print"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function RekapPresensiPage() {
-    const { classes, students, attendance, sekolah, user } = useData()
+    const { classes, students, attendance, sekolah, user, isLoaded } = useData()
     const componentRef = useRef<HTMLDivElement>(null)
 
     const currentYear = new Date().getFullYear()
@@ -80,6 +81,38 @@ export default function RekapPresensiPage() {
         })
 
         return totals
+    }
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 pb-24 animate-in fade-in duration-700">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <Skeleton className="h-10 w-32" />
+                </div>
+
+                <Card className="bg-card border-border">
+                    <CardContent className="pt-6">
+                        <div className="grid gap-6 md:grid-cols-5 items-end">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <div key={i} className="space-y-2">
+                                    <Skeleton className="h-4 w-20" />
+                                    <Skeleton className="h-10 w-full" />
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <div className="text-center py-12 text-muted-foreground bg-card rounded-lg border border-border flex flex-col items-center justify-center">
+                    <Skeleton className="h-12 w-12 rounded-full mb-4" />
+                    <Skeleton className="h-4 w-64" />
+                </div>
+            </div>
+        )
     }
 
     return (

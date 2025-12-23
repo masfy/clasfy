@@ -10,15 +10,19 @@ import { CustomModal } from "@/components/ui/custom-modal"
 import { useData, StudentData } from "@/lib/data-context"
 import { useToast } from "@/components/ui/use-toast"
 import * as XLSX from "xlsx"
+import { Skeleton } from "@/components/ui/skeleton"
+
+import { useSearchParams } from "next/navigation"
 
 export default function DataSiswaPage() {
-    const { students, classes, addStudent, updateStudent, deleteStudent, isSyncing, syncError, forceSync } = useData()
+    const { students, classes, addStudent, updateStudent, deleteStudent, isSyncing, syncError, forceSync, isLoaded } = useData()
     const { toast } = useToast()
+    const searchParams = useSearchParams()
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [editingId, setEditingId] = useState<number | null>(null)
     const [formData, setFormData] = useState<Partial<StudentData>>({})
     const [filterClass, setFilterClass] = useState("Semua Kelas")
-    const [searchQuery, setSearchQuery] = useState("")
+    const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "")
 
     // Calculate summary from context data
     const classSummary = classes.map(cls => ({
@@ -28,8 +32,8 @@ export default function DataSiswaPage() {
 
     const filteredStudents = students.filter(student => {
         const matchesClass = filterClass === "Semua Kelas" || student.class === filterClass
-        const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            student.nis.includes(searchQuery)
+        const matchesSearch = (student.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (student.nis || "").toString().includes(searchQuery)
         return matchesClass && matchesSearch
     })
 
@@ -144,6 +148,76 @@ export default function DataSiswaPage() {
 
         // Reset input
         e.target.value = ""
+    }
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 animate-in fade-in duration-700">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <div className="flex gap-2">
+                        <Skeleton className="h-10 w-32" />
+                        <Skeleton className="h-10 w-32" />
+                        <Skeleton className="h-10 w-32" />
+                    </div>
+                </div>
+
+                {/* Class Summary Skeleton */}
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <Card key={i} className="bg-card border-border">
+                            <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-2">
+                                <Skeleton className="h-3 w-16" />
+                                <Skeleton className="h-6 w-8" />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                {/* Filters Skeleton */}
+                <div className="flex gap-4 bg-card p-4 rounded-lg border border-border">
+                    <Skeleton className="h-10 flex-1" />
+                    <Skeleton className="h-10 w-40" />
+                </div>
+
+                {/* Table Skeleton */}
+                <Card className="bg-card border-border">
+                    <CardHeader>
+                        <Skeleton className="h-6 w-32" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="rounded-md border border-border">
+                            <div className="border-b border-border bg-muted p-4">
+                                <div className="flex justify-between">
+                                    {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                                        <Skeleton key={i} className="h-4 w-20" />
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="p-4 space-y-4">
+                                {[1, 2, 3, 4, 5].map((i) => (
+                                    <div key={i} className="flex justify-between items-center">
+                                        <Skeleton className="h-4 w-32" />
+                                        <Skeleton className="h-4 w-24" />
+                                        <Skeleton className="h-6 w-16 rounded-full" />
+                                        <Skeleton className="h-4 w-20" />
+                                        <Skeleton className="h-4 w-20" />
+                                        <Skeleton className="h-6 w-16 rounded-full" />
+                                        <div className="flex gap-2">
+                                            <Skeleton className="h-8 w-8" />
+                                            <Skeleton className="h-8 w-8" />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        )
     }
 
     return (

@@ -7,9 +7,10 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Star, Target, Zap, ChevronRight, Lock } from "lucide-react"
 import Link from "next/link"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function StudentDashboard() {
-    const { students, badges, challenges } = useData()
+    const { students, badges, challenges, isLoaded } = useData()
     const [student, setStudent] = useState<any>(null)
 
     useEffect(() => {
@@ -23,7 +24,80 @@ export default function StudentDashboard() {
         }
     }, [students])
 
-    if (!student) return null
+    // Loading State
+    if (!isLoaded || !student) {
+        return (
+            <div className="space-y-6 pb-20 animate-in fade-in duration-700">
+                {/* Hero Skeleton */}
+                <div className="relative overflow-hidden rounded-2xl bg-slate-200/50 p-6 h-48">
+                    <div className="flex flex-col items-center text-center space-y-4">
+                        <Skeleton className="h-6 w-20 rounded-full" />
+                        <Skeleton className="h-8 w-64" />
+                        <Skeleton className="h-4 w-48" />
+                        <div className="w-full max-w-xs space-y-2 pt-2">
+                            <div className="flex justify-between">
+                                <Skeleton className="h-3 w-12" />
+                                <Skeleton className="h-3 w-12" />
+                            </div>
+                            <Skeleton className="h-3 w-full rounded-full" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Stats Grid Skeleton */}
+                <div className="grid grid-cols-3 gap-3">
+                    {[1, 2, 3].map((i) => (
+                        <Card key={i} className="h-32 border-none shadow-sm">
+                            <CardContent className="p-3 flex flex-col items-center justify-center h-full space-y-2">
+                                <Skeleton className="h-8 w-8 rounded-full" />
+                                <Skeleton className="h-6 w-8" />
+                                <Skeleton className="h-3 w-12" />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                {/* Active Quest Skeleton */}
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between px-1">
+                        <Skeleton className="h-6 w-24" />
+                        <Skeleton className="h-4 w-16" />
+                    </div>
+                    <Card className="border-none shadow-sm h-32">
+                        <CardContent className="p-4 space-y-3">
+                            <div className="flex justify-between">
+                                <div className="space-y-2">
+                                    <Skeleton className="h-4 w-48" />
+                                    <Skeleton className="h-3 w-64" />
+                                </div>
+                                <Skeleton className="h-6 w-16 rounded-full" />
+                            </div>
+                            <div className="flex justify-between pt-2">
+                                <Skeleton className="h-3 w-24" />
+                                <Skeleton className="h-6 w-16" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Badges Skeleton */}
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between px-1">
+                        <Skeleton className="h-6 w-32" />
+                        <Skeleton className="h-4 w-16" />
+                    </div>
+                    <div className="flex gap-3 overflow-x-auto pb-4">
+                        {[1, 2, 3, 4].map((i) => (
+                            <div key={i} className="flex flex-col items-center gap-2 w-20 flex-shrink-0">
+                                <Skeleton className="h-16 w-16 rounded-2xl" />
+                                <Skeleton className="h-3 w-16" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     const level = Math.floor((student.points || 0) / 100) + 1
     const progress = (student.points || 0) % 100

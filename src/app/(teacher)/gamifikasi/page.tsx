@@ -5,9 +5,10 @@ import { useData } from "@/lib/data-context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Trophy, Star, Zap } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function GamificationPage() {
-    const { students, challenges } = useData()
+    const { students, challenges, isLoaded } = useData()
     const router = useRouter()
     const [mounted, setMounted] = React.useState(false)
 
@@ -23,6 +24,32 @@ export default function GamificationPage() {
     }, [students])
 
     if (!mounted) return null
+
+    if (!isLoaded) {
+        return (
+            <div className="flex flex-col gap-6 pb-8 animate-in fade-in duration-700">
+                <div>
+                    <Skeleton className="h-8 w-48 mb-2" />
+                    <Skeleton className="h-4 w-64" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[1, 2, 3].map((i) => (
+                        <Card key={i} className="bg-card border-border">
+                            <CardContent className="p-6 flex items-center gap-4">
+                                <Skeleton className="h-14 w-14 rounded-full" />
+                                <div className="space-y-2">
+                                    <Skeleton className="h-4 w-24" />
+                                    <Skeleton className="h-8 w-32" />
+                                    <Skeleton className="h-3 w-20" />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col gap-6 pb-8">

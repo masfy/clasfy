@@ -9,9 +9,10 @@ import { useData } from "@/lib/data-context"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useReactToPrint } from "react-to-print"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function RekapNilaiPage() {
-    const { classes, mapel, students, grades, assignments, categories, weights, sekolah, user } = useData()
+    const { classes, mapel, students, grades, assignments, categories, weights, sekolah, user, isLoaded } = useData()
     const [selectedClassId, setSelectedClassId] = useState("")
     const [selectedMapelId, setSelectedMapelId] = useState("")
     const [selectedSemester, setSelectedSemester] = useState("ganjil")
@@ -210,6 +211,66 @@ export default function RekapNilaiPage() {
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
+    }
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 animate-in fade-in duration-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <div className="flex gap-2">
+                        <Skeleton className="h-10 w-24" />
+                        <Skeleton className="h-10 w-32" />
+                    </div>
+                </div>
+
+                <div className="flex gap-4">
+                    <Skeleton className="h-10 w-40" />
+                    <Skeleton className="h-10 w-40" />
+                </div>
+
+                <Card className="bg-card border-border">
+                    <CardHeader className="border-b border-border pb-4">
+                        <div className="flex items-center gap-2">
+                            <Skeleton className="h-5 w-5 rounded-full" />
+                            <Skeleton className="h-6 w-32" />
+                        </div>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                        <div className="grid gap-6 md:grid-cols-3">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="space-y-2">
+                                    <Skeleton className="h-4 w-24" />
+                                    <Skeleton className="h-10 w-full" />
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card className="bg-card border-border">
+                    <CardContent className="p-0">
+                        <div className="space-y-4 py-4 px-6">
+                            <div className="flex gap-4 mb-4">
+                                {[1, 2, 3, 4, 5, 6].map((i) => (
+                                    <Skeleton key={i} className="h-6 w-24" />
+                                ))}
+                            </div>
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <div key={i} className="flex gap-4">
+                                    {[1, 2, 3, 4, 5, 6].map((j) => (
+                                        <Skeleton key={j} className="h-4 w-full" />
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        )
     }
 
     return (

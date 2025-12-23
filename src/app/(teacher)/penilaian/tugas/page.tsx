@@ -42,9 +42,10 @@ import {
 } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function TugasPage() {
-    const { assignments, addAssignment, updateAssignment, deleteAssignment, classes, mapel, categories, students, grades } = useData()
+    const { assignments, addAssignment, updateAssignment, deleteAssignment, classes, mapel, categories, students, grades, isLoaded } = useData()
     const { toast } = useToast()
 
     // State
@@ -200,6 +201,63 @@ export default function TugasPage() {
         if (item.isOverdue) return <Badge className="bg-red-500/10 text-red-500 hover:bg-red-500/20">Lewat Deadline</Badge>
         if (item.status === "Closed") return <Badge className="bg-gray-500/10 text-gray-500 hover:bg-gray-500/20">Ditutup</Badge>
         return <Badge className="bg-primary/10 text-primary hover:bg-primary/20">Aktif</Badge>
+    }
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 animate-in fade-in duration-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <Skeleton className="h-10 w-32" />
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-4">
+                    {[1, 2, 3, 4].map((i) => (
+                        <Card key={i} className="bg-card border-border">
+                            <CardContent className="p-6 flex items-center justify-between">
+                                <div>
+                                    <Skeleton className="h-4 w-24 mb-2" />
+                                    <Skeleton className="h-8 w-16" />
+                                </div>
+                                <Skeleton className="h-10 w-10 rounded-full" />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                <Card className="bg-card border-border">
+                    <CardContent className="p-4">
+                        <div className="grid gap-4 md:grid-cols-4">
+                            {[1, 2, 3, 4].map((i) => (
+                                <Skeleton key={i} className="h-10 w-full" />
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card className="bg-card border-border">
+                    <CardContent className="p-0">
+                        <div className="space-y-4 py-4 px-6">
+                            <div className="flex gap-4 mb-4">
+                                {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                                    <Skeleton key={i} className="h-6 w-24" />
+                                ))}
+                            </div>
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <div key={i} className="flex gap-4">
+                                    {[1, 2, 3, 4, 5, 6, 7].map((j) => (
+                                        <Skeleton key={j} className="h-4 w-full" />
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        )
     }
 
     return (

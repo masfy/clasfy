@@ -32,9 +32,10 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Crown, Star, Search, Gift, Medal } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function PeringkatPage() {
-    const { students, badges, classes, addPoints, giveBadge } = useData()
+    const { students, badges, classes, addPoints, giveBadge, isLoaded } = useData()
     const [searchTerm, setSearchTerm] = React.useState("")
     const [selectedClass, setSelectedClass] = React.useState<string>("all")
     const [selectedStudent, setSelectedStudent] = React.useState<number | null>(null)
@@ -80,6 +81,56 @@ export default function PeringkatPage() {
     }
 
     if (!mounted) return null
+
+    if (!isLoaded) {
+        return (
+            <div className="flex flex-col gap-6 pb-8 animate-in fade-in duration-700">
+                <div>
+                    <Skeleton className="h-8 w-48 mb-2" />
+                    <Skeleton className="h-4 w-64" />
+                </div>
+
+                <Card className="bg-card border-border">
+                    <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div>
+                            <Skeleton className="h-6 w-32 mb-2" />
+                            <Skeleton className="h-4 w-64" />
+                        </div>
+                        <div className="flex gap-2 w-full sm:w-auto">
+                            <Skeleton className="h-10 w-32" />
+                            <Skeleton className="h-10 w-64" />
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                                <div key={i} className="flex items-center justify-between gap-4">
+                                    <Skeleton className="h-8 w-8 rounded-full" />
+                                    <div className="flex items-center gap-3 flex-1">
+                                        <Skeleton className="h-10 w-10 rounded-full" />
+                                        <div className="space-y-1">
+                                            <Skeleton className="h-4 w-32" />
+                                            <Skeleton className="h-3 w-16" />
+                                        </div>
+                                    </div>
+                                    <Skeleton className="h-4 w-24 hidden sm:block" />
+                                    <Skeleton className="h-4 w-16 hidden sm:block" />
+                                    <div className="flex gap-1">
+                                        <Skeleton className="h-8 w-8 rounded-full" />
+                                        <Skeleton className="h-8 w-8 rounded-full" />
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Skeleton className="h-8 w-20" />
+                                        <Skeleton className="h-8 w-20" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col gap-6 pb-8">

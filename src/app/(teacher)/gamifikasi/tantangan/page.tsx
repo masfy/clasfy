@@ -25,9 +25,10 @@ import {
 } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Zap, Plus, Trash2, Calendar, CheckCircle2, Star } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function TantanganPage() {
-    const { students, challenges, addChallenge, deleteChallenge, markChallengeComplete, markBatchChallengeComplete } = useData()
+    const { students, challenges, addChallenge, deleteChallenge, markChallengeComplete, markBatchChallengeComplete, isLoaded } = useData()
     const [mounted, setMounted] = React.useState(false)
 
     // Add Challenge State
@@ -76,6 +77,41 @@ export default function TantanganPage() {
     const selectedChallenge = challenges.find(c => c.id === selectedChallengeId)
 
     if (!mounted) return null
+
+    if (!isLoaded) {
+        return (
+            <div className="flex flex-col gap-6 pb-8 animate-in fade-in duration-700">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <Skeleton className="h-10 w-40" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <Card key={i} className="bg-card border-border">
+                            <CardHeader>
+                                <Skeleton className="h-6 w-3/4 mb-2" />
+                                <Skeleton className="h-4 w-full" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex justify-between items-center mt-2">
+                                    <Skeleton className="h-4 w-24" />
+                                    <Skeleton className="h-6 w-16 rounded-full" />
+                                </div>
+                                <div className="mt-4 flex items-center justify-between">
+                                    <Skeleton className="h-4 w-20" />
+                                    <Skeleton className="h-6 w-16 rounded-full" />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col gap-6 pb-8">

@@ -6,9 +6,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useData } from "@/lib/data-context"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 import { Users, UserCheck, UserX, Clock } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function StatistikPresensiPage() {
-    const { classes, students, attendance } = useData()
+    const { classes, students, attendance, isLoaded } = useData()
 
     const currentYear = new Date().getFullYear()
     const yearOptions = [currentYear - 1, currentYear, currentYear + 1, currentYear + 2]
@@ -63,6 +64,58 @@ export default function StatistikPresensiPage() {
         "Januari", "Februari", "Maret", "April", "Mei", "Juni",
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     ]
+
+    if (!isLoaded) {
+        return (
+            <div className="space-y-6 pb-24 animate-in fade-in duration-700">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <Skeleton className="h-8 w-48 mb-2" />
+                        <Skeleton className="h-4 w-64" />
+                    </div>
+                    <div className="flex gap-2">
+                        <Skeleton className="h-10 w-32" />
+                        <Skeleton className="h-10 w-32" />
+                        <Skeleton className="h-10 w-24" />
+                    </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-4">
+                    {[1, 2, 3, 4].map((i) => (
+                        <Card key={i} className="bg-card border-border">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <Skeleton className="h-4 w-24" />
+                                <Skeleton className="h-4 w-4 rounded-full" />
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <Skeleton className="h-8 w-16" />
+                                <Skeleton className="h-3 w-24" />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-2">
+                    <Card className="bg-card border-border h-[380px]">
+                        <CardHeader>
+                            <Skeleton className="h-6 w-48" />
+                        </CardHeader>
+                        <CardContent className="flex items-center justify-center h-[300px]">
+                            <Skeleton className="h-full w-full rounded-lg" />
+                        </CardContent>
+                    </Card>
+                    <Card className="bg-card border-border h-[380px]">
+                        <CardHeader>
+                            <Skeleton className="h-6 w-48" />
+                        </CardHeader>
+                        <CardContent className="flex items-center justify-center h-[300px]">
+                            <Skeleton className="h-48 w-48 rounded-full" />
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="space-y-6 pb-24">
